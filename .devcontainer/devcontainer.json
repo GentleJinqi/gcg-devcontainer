@@ -15,7 +15,14 @@
   // The names must match the selected image. The account must have numeric
   // UID 1000 and primary GID 1000, and its HOME must exist and be writable.
   "containerUser": "ubuntu",
-  "remoteUser": "ubuntu"
+  "remoteUser": "ubuntu",
+
+  // HOME is reset on every stop/start. Keep Claude Code's login, settings and
+  // session history on the per-workspace persistent disk instead. This is a
+  // path, never a secret; the directory sits outside the Git checkout.
+  "containerEnv": {
+    "CLAUDE_CONFIG_DIR": "/workspaces/.claude"
+  }
 
   // STOP HERE. Do not add workspaceFolder, workspaceMount, mounts, runArgs,
   // privileged, capAdd, securityOpt, dockerComposeFile or hostRequirements.

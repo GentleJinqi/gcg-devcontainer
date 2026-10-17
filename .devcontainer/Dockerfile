@@ -12,6 +12,14 @@ USER root
 # depend on the selected distribution; use the matching complete recipe in
 # docs/04-customize-your-environment.md.
 
+# HOME lives in the container layer and is reset on every stop/start. Point
+# ~/.ssh at the per-workspace persistent disk so keys, config and known_hosts
+# survive restarts. The link holds no secret; create the target once inside
+# the workspace with: mkdir -m 700 /workspaces/.ssh
+RUN home="$(getent passwd 1000 | cut -d: -f6)" \
+    && ln -s /workspaces/.ssh "$home/.ssh" \
+    && chown -h 1000:1000 "$home/.ssh"
+
 # STOP EDITING HERE. The final effective user must have UID/GID 1000. The
 # username and HOME path may differ in another compatible image.
 USER 1000:1000
