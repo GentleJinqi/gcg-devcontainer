@@ -62,6 +62,20 @@ with the exact same Git URL/ref and Dev Container directory. That sequence
 normally lets the 5090 workspace reuse the image cache instead of occupying the
 exclusive GPU for a cold build.
 
+### Updating an existing workspace (local note)
+
+Envbuilder never re-pulls a checkout that already exists below `/workspaces`
+("The repository already exists!"). After pushing a change from another
+machine, run `git pull --ff-only` inside the workspace checkout **before**
+stop/start. Otherwise the restart builds the old files but files the result
+under the new commit's cache key, and every later start, including the RTX 5090
+workspace, reuses that stale image. If that already happened, push one more
+commit and repeat with the pull first.
+
+This repository keeps Claude Code's config in `/workspaces/.claude`
+(`CLAUDE_CONFIG_DIR`) and links `~/.ssh` to `/workspaces/.ssh`, because HOME is
+reset on every stop/start.
+
 ## Choose, customize and save
 
 - Choose a GCG mutable tag, pin a digest, or use another compatible image:

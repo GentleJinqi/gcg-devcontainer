@@ -58,6 +58,17 @@ Coder/Terraform state 和 workspace Pod specification。绝对不要将它们嵌
 目录创建 **GCG RTX 5090 Dev Container**。这样通常可以让 5090 工作区复用镜像缓存，
 避免独占 GPU 被冷构建占用。
 
+### 更新已有工作区（本仓库补充说明）
+
+Envbuilder 不会重新拉取 `/workspaces` 下已经存在的 checkout（日志显示
+"The repository already exists!"）。在别的机器上 push 改动后，必须**先**在工作区的
+checkout 里运行 `git pull --ff-only`，**再** stop/start。否则重启会用旧文件构建，
+却把结果存到新 commit 的缓存键下；之后每次启动（包括 RTX 5090 工作区）都会复用这个
+过期镜像。如果已经发生，再 push 一个新 commit，先 pull 再重启即可。
+
+本仓库把 Claude Code 配置放在 `/workspaces/.claude`（`CLAUDE_CONFIG_DIR`），并把
+`~/.ssh` 链接到 `/workspaces/.ssh`，因为 HOME 每次 stop/start 都会被重置。
+
 ## 选择、自定义和保存
 
 - 选择一个 GCG 可变 tag、固定 digest，或使用其他兼容镜像：
