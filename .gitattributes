@@ -1,0 +1,3 @@
+# Keep LF everywhere: scripts/check-environment.sh fails inside the Linux
+# workspace if it is checked out or edited on Windows with CRLF endings.
+* text=auto eol=lf

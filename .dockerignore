@@ -1,0 +1,16 @@
+# Keep large, private and generated files out of the Docker build context.
+# Do not remove the .devcontainer directory from Git.
+.git
+.venv
+.env
+.env.*
+*.key
+*.pem
+__pycache__
+*.pyc
+data
+datasets
+checkpoints
+outputs
+runs
+wandb

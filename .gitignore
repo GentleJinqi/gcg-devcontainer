@@ -1,0 +1,21 @@
+# Local secrets must never be committed.
+.env
+.env.*
+*.key
+*.pem
+
+# Recreated development files.
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Large training outputs belong in /shared, not in Git.
+data/
+datasets/
+checkpoints/
+outputs/
+runs/
+wandb/

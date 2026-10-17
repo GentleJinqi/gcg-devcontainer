@@ -1,0 +1,3 @@
+# Optional example: use this file only if your project uses Python.
+# Create /workspaces/.venv manually by following the matching recipe in
+# docs/04-customize-your-environment.md. Pin team-reviewed package versions.
