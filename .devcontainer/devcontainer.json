@@ -17,12 +17,25 @@
   "containerUser": "ubuntu",
   "remoteUser": "ubuntu",
 
-  // HOME is reset on every stop/start. Keep Claude Code's login, settings and
-  // session history on the per-workspace persistent disk instead. This is a
-  // path, never a secret; the directory sits outside the Git checkout.
+  // Paths only, never secrets. Container-level values reach every process,
+  // including Claude Code sessions, which do not read ~/.bashrc.
   "containerEnv": {
-    "CLAUDE_CONFIG_DIR": "/workspaces/.claude"
-  }
+    // Per-workspace, on the persistent /workspaces disk (HOME is reset on
+    // every stop/start): Claude Code login and history, misc and compile caches.
+    "CLAUDE_CONFIG_DIR": "/workspaces/.claude",
+    "XDG_CACHE_HOME": "/workspaces/.cache",
+    "TRITON_CACHE_DIR": "/workspaces/.cache/triton",
+    "TORCHINDUCTOR_CACHE_DIR": "/workspaces/.cache/torchinductor",
+    // Shared by every host. Keep in sync with
+    // /home/ubuntu/shared/env/common.sh and gcg-standard's
+    // ~/.claude/settings.json "env".
+    "HF_HOME": "/home/ubuntu/shared/cache/huggingface",
+    "UV_CACHE_DIR": "/home/ubuntu/shared/cache/uv",
+    "TORCH_HOME": "/home/ubuntu/shared/cache/torch"
+  },
+
+  // Repeat-safe: targets of the ~/.ssh and ~/.claude links from Dockerfile.
+  "postCreateCommand": "mkdir -p -m 700 /workspaces/.ssh /workspaces/.claude"
 
   // STOP HERE. Do not add workspaceFolder, workspaceMount, mounts, runArgs,
   // privileged, capAdd, securityOpt, dockerComposeFile or hostRequirements.

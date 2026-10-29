@@ -72,9 +72,21 @@ under the new commit's cache key, and every later start, including the RTX 5090
 workspace, reuses that stale image. If that already happened, push one more
 commit and repeat with the pull first.
 
-This repository keeps Claude Code's config in `/workspaces/.claude`
-(`CLAUDE_CONFIG_DIR`) and links `~/.ssh` to `/workspaces/.ssh`, because HOME is
-reset on every stop/start.
+### What this repository changes (local note)
+
+HOME is reset on every stop/start, and this workspace shares the 1T disk with
+gcg-standard workspaces. So this repository:
+
+- uses the conda image family, so `/opt/conda/bin/python3.12` matches
+  gcg-standard and the shared venvs run unchanged;
+- links `/home/ubuntu/shared` to `/shared`, so every host reaches the shared
+  disk by the same path;
+- links `~/.ssh` and `~/.claude` to `/workspaces`, sets `CLAUDE_CONFIG_DIR`, and
+  keeps misc and compile caches in `/workspaces/.cache`;
+- points `HF_HOME`, `UV_CACHE_DIR` and `TORCH_HOME` at the shared caches.
+
+The rules for working on the shared disk from several hosts live in
+`/home/ubuntu/shared/env/RULES.md`.
 
 ## Choose, customize and save
 

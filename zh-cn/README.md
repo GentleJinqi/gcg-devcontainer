@@ -66,8 +66,19 @@ checkout 里运行 `git pull --ff-only`，**再** stop/start。否则重启会�
 却把结果存到新 commit 的缓存键下；之后每次启动（包括 RTX 5090 工作区）都会复用这个
 过期镜像。如果已经发生，再 push 一个新 commit，先 pull 再重启即可。
 
-本仓库把 Claude Code 配置放在 `/workspaces/.claude`（`CLAUDE_CONFIG_DIR`），并把
-`~/.ssh` 链接到 `/workspaces/.ssh`，因为 HOME 每次 stop/start 都会被重置。
+### 本仓库做了哪些改动（补充说明）
+
+HOME 每次 stop/start 都会被重置，而且这台工作区和 gcg-standard 工作区共用同一块 1T
+共享盘。所以本仓库：
+
+- 使用带 conda 的镜像系列，让 `/opt/conda/bin/python3.12` 与 gcg-standard 一致，
+  共享盘上的 venv 不用改就能运行；
+- 把 `/home/ubuntu/shared` 链接到 `/shared`，所有机器用同一个路径访问共享盘；
+- 把 `~/.ssh` 和 `~/.claude` 链接到 `/workspaces`，设置 `CLAUDE_CONFIG_DIR`，
+  零碎缓存和编译缓存放在 `/workspaces/.cache`；
+- 把 `HF_HOME`、`UV_CACHE_DIR`、`TORCH_HOME` 指向共享盘上的缓存。
+
+多台机器同时使用共享盘的规则见 `/home/ubuntu/shared/env/RULES.md`。
 
 ## 选择、自定义和保存
 
